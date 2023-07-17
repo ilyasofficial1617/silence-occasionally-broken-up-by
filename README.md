@@ -9,5 +9,9 @@
 1. Run the nextjs `npm run build && npm run start`
 
 ## Upcoming changes 
-- [ ] a
-- [x] b
+- [x] sound effect audio player 
+- [x] random interval
+- [x] audio from server (express-storage-api)
+- [] saves player state 
+- [] upload custom sounds
+- [] ui revamp
