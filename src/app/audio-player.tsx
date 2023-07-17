@@ -119,7 +119,7 @@ const MemeAudioPlayer = ({
     playSoundEffect();
     // settimeout play after ..
     const cooldown = Math.floor(
-      (Math.random() * (+maxTime - +minTime + 1) + +minTime) * 1000,
+      (Math.random() * (+maxTime - +minTime + 1) + +minTime) * 1000
     );
     // console.log("cooldown " + cooldown + " milliseconds");
     // store it in ref

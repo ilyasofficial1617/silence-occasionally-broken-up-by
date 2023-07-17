@@ -6,7 +6,7 @@ export default function Home() {
       <p className="text-9xl font-bold">Silence</p>
       <div>
         <div className="ml-2 text-xl">Occasionally broken up by ..</div>
-        <MemeAudioPlayer className="ml-2"/>
+        <MemeAudioPlayer className="ml-2" />
       </div>
     </main>
   );
