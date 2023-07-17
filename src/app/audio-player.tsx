@@ -149,10 +149,10 @@ const MemeAudioPlayer = ({
           })}
         </select>
       </div>
-      <div>
-        volume{" "}
+      <div className="py-1">
+        <p className="inline align-middle">volume </p>
         <input
-          className="slider w-36"
+          className="slider mt-1 w-36 align-middle"
           type="range"
           min="1"
           max="100"
@@ -160,7 +160,7 @@ const MemeAudioPlayer = ({
           onChange={onVolumeChange}
         />
       </div>
-      <div>
+      <div className="py-1">
         <div className="">play randomly between </div>
         <input
           type="number"
@@ -177,7 +177,7 @@ const MemeAudioPlayer = ({
         />
         <div className="inline"> seconds </div>
       </div>
-      <div>
+      <div className="py-1">
         <button
           className="button bg-gray-200 p-5 hover:bg-gray-100 "
           onClick={onTestPlay}
