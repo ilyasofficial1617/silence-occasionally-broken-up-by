@@ -25,18 +25,14 @@ const MemeAudioPlayer = ({
   const [selectedAudio, setSelectedAudio] = useState("silence");
   const [volumeSlider, setVolumeSlider] = useState("100");
   let loopTimeoutRef: ReturnType<typeof setTimeout>;
-
+  const [minTime, setMinTime] = useState("5");
+  const [maxTime, setMaxTime] = useState("30");
   const [playlist, setPlaylist] = useState<IAudio[]>([
     {
       name: "silence",
       link: "silence.mp3",
     },
   ]);
-
-  // const getPlaylist = async (): IAudio[] => {
-  //   await
-  //   process.env.STORAGE_HOST
-  // };
 
   interface IAudioInfoResponse {
     name: string;
@@ -80,6 +76,18 @@ const MemeAudioPlayer = ({
     setAudioLink(playlist[0].link);
   }, [playlist]);
 
+  const playSoundEffect = () => {
+    audioRef.current!.currentTime = 0;
+    audioRef.current!.play();
+  };
+
+  const stopSoundEffect = () => {
+    audioRef.current!.currentTime = 0;
+    audioRef.current!.pause();
+  };
+
+  // input form listener
+
   const onSelectAudio = (event: ChangeEvent<HTMLSelectElement>) => {
     setSelectedAudio(event.target.value);
     setAudioLink(event.target.value);
@@ -90,15 +98,15 @@ const MemeAudioPlayer = ({
     audioRef.current!.volume = +event.target.value / 100;
   };
 
-  const playSoundEffect = () => {
-    audioRef.current!.currentTime = 0;
-    audioRef.current!.play();
+  const onMinTimeChanged = (event: ChangeEvent<HTMLInputElement>) => {
+    setMinTime(event.target.value);
   };
 
-  const stopSoundEffect = () => {
-    audioRef.current!.currentTime = 0;
-    audioRef.current!.pause();
+  const onMaxTimeChanged = (event: ChangeEvent<HTMLInputElement>) => {
+    setMaxTime(event.target.value);
   };
+
+  // input form listener ends
 
   // buttons listener
 
@@ -110,8 +118,12 @@ const MemeAudioPlayer = ({
     // play it once
     playSoundEffect();
     // settimeout play after ..
-    // store it in ..
-    loopTimeoutRef = setTimeout(onPlay, 1000);
+    const cooldown = Math.floor(
+      (Math.random() * (+maxTime - +minTime + 1) + +minTime) * 1000,
+    );
+    // console.log("cooldown " + cooldown + " milliseconds");
+    // store it in ref
+    loopTimeoutRef = setTimeout(onPlay, cooldown);
   };
 
   const onStop = () => {
@@ -150,9 +162,19 @@ const MemeAudioPlayer = ({
       </div>
       <div>
         <div className="">play randomly between </div>
-        <input type="number" className="w-12 border-2 border-gray-200" />
+        <input
+          type="number"
+          value={minTime}
+          onChange={onMinTimeChanged}
+          className="w-12 border-2 border-gray-200"
+        />
         <div className="inline"> seconds to </div>
-        <input type="number" className="w-12 border-2 border-gray-200" />
+        <input
+          type="number"
+          value={maxTime}
+          onChange={onMaxTimeChanged}
+          className="w-12 border-2 border-gray-200"
+        />
         <div className="inline"> seconds </div>
       </div>
       <div>
