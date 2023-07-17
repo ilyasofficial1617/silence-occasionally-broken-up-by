@@ -14,4 +14,4 @@
 - [x] audio from server (express-storage-api)
 - [] saves player state 
 - [] upload custom sounds
-- [] ui revamp
+- [] ui revamp and/or mobile ui
