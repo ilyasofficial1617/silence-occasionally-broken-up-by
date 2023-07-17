@@ -23,6 +23,8 @@ const MemeAudioPlayer = ({
   const audioRef = useRef<HTMLAudioElement>(null);
   const [audioLink, setAudioLink] = useState("");
   const [selectedAudio, setSelectedAudio] = useState("silence");
+  const [volumeSlider, setVolumeSlider] = useState("100");
+  let loopTimeoutRef: ReturnType<typeof setTimeout>;
 
   const [playlist, setPlaylist] = useState<IAudio[]>([
     {
@@ -42,6 +44,8 @@ const MemeAudioPlayer = ({
   }
 
   useEffect(() => {
+    // on mount component
+
     // update list of sound effect
     fetch(process.env.NEXT_PUBLIC_STORAGE_HOST!)
       .then((res) => res.json())
@@ -61,6 +65,12 @@ const MemeAudioPlayer = ({
         // set the updated playlist
         setPlaylist(newPlaylist);
       });
+
+    //on dismount component
+    return () => {
+      // clear any loop/timeout
+      clearTimeout(loopTimeoutRef);
+    };
   }, []);
 
   useEffect(() => {
@@ -75,10 +85,43 @@ const MemeAudioPlayer = ({
     setAudioLink(event.target.value);
   };
 
-  const onTestPlay = () => {
+  const onVolumeChange = (event: ChangeEvent<HTMLInputElement>) => {
+    setVolumeSlider(event.target.value);
+    audioRef.current!.volume = +event.target.value / 100;
+  };
+
+  const playSoundEffect = () => {
     audioRef.current!.currentTime = 0;
     audioRef.current!.play();
   };
+
+  const stopSoundEffect = () => {
+    audioRef.current!.currentTime = 0;
+    audioRef.current!.pause();
+  };
+
+  // buttons listener
+
+  const onTestPlay = () => {
+    playSoundEffect();
+  };
+
+  const onPlay = () => {
+    // play it once
+    playSoundEffect();
+    // settimeout play after ..
+    // store it in ..
+    loopTimeoutRef = setTimeout(onPlay, 1000);
+  };
+
+  const onStop = () => {
+    // stop the sound
+    stopSoundEffect();
+    // clear the timeout id
+    clearTimeout(loopTimeoutRef);
+  };
+
+  // buttons listener end
 
   return (
     <div className={className}>
@@ -95,14 +138,41 @@ const MemeAudioPlayer = ({
         </select>
       </div>
       <div>
-        volume <input type="range" min="1" max="100" className="slider w-36" />
+        volume{" "}
+        <input
+          className="slider w-36"
+          type="range"
+          min="1"
+          max="100"
+          value={volumeSlider}
+          onChange={onVolumeChange}
+        />
+      </div>
+      <div>
+        <div className="">play randomly between </div>
+        <input type="number" className="w-12 border-2 border-gray-200" />
+        <div className="inline"> seconds to </div>
+        <input type="number" className="w-12 border-2 border-gray-200" />
+        <div className="inline"> seconds </div>
       </div>
       <div>
         <button
-          className="button rounded-full bg-gray-200 p-5 hover:bg-gray-100 "
+          className="button bg-gray-200 p-5 hover:bg-gray-100 "
           onClick={onTestPlay}
         >
           test
+        </button>
+        <button
+          className="button bg-gray-200 p-5 hover:bg-gray-100 "
+          onClick={onPlay}
+        >
+          play
+        </button>
+        <button
+          className="button bg-gray-200 p-5 hover:bg-gray-100 "
+          onClick={onStop}
+        >
+          stop
         </button>
       </div>
     </div>
